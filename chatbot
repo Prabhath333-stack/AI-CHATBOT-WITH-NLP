@@ -1,0 +1,56 @@
+import os
+import streamlit as st
+from dotenv import load_dotenv
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
+from openai import OpenAIError  # Handles any OpenAI-related error
+
+# Load environment variables from .env file
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+# Initialize LangChain chat model
+llm = ChatOpenAI(temperature=0.7, openai_api_key=OPENAI_API_KEY)
+
+# Set up memory to retain conversation context
+memory = ConversationBufferMemory()
+
+# Create conversation chain
+conversation = ConversationChain(
+    llm=llm,
+    memory=memory,
+    verbose=False
+)
+
+# Set up Streamlit UI
+st.set_page_config(page_title="LangChain Chatbot", layout="wide")
+st.title("🤖 Chatbot using LangChain & Streamlit")
+
+# Store chat history in session
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# Input box
+user_input = st.text_input("You:", key="input")
+
+# If user enters a message
+if user_input:
+    try:
+        # Get response from the chatbot
+        response = conversation.predict(input=user_input)
+
+        # Save both question and answer to chat history
+        st.session_state.chat_history.append(("You", user_input))
+        st.session_state.chat_history.append(("Bot", response))
+
+    except OpenAIError as e:
+        st.error(f" OpenAI API Error: {str(e)}")
+
+# Display chat history
+for speaker, message in st.session_state.chat_history:
+    if speaker == "You":
+        st.markdown(f"** {speaker}:** {message}")
+    else:
+        st.markdown(f"** {speaker}:** {message}")
+
