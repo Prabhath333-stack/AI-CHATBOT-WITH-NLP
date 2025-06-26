@@ -28,3 +28,4 @@ Exception handling is implemented to catch any errors from the OpenAI API, such 
 To run the chatbot, users install the required dependencies (streamlit, langchain, openai, python-dotenv), set their API key in a .env file, and start the app using streamlit run chatbot.py.
 
 This chatbot can be extended with additional features like file upload (e.g., PDFs for Q&A), chat export, avatar integration, or deployment to a public web server. The modular design makes it a great base for educational, customer support, or interactive assistant projects.
+![Image](https://github.com/user-attachments/assets/e7343105-dbf2-4f6c-89a0-71638cab8163)
